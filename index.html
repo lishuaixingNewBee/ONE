@@ -1,0 +1,115 @@
+<!doctype html>
+<html class="home-html">
+	<head>
+		<meta charset="UTF-8">
+		<title>one一个</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/lib.css"/>		
+	</head>
+	<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<body>
+		<div id="App">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-pull-left everyday" href="javascript:;" data-href="examples/everyday.html" @tap.prevent="OpenWindow($event, 'everyday')"><i class="mui-icon mui-icon-paperplane"></i>每日一图</a>
+				<a class="mui-icon mui-icon-bars mui-pull-right" href="javascript:;"  data-href="examples/info.html" @tap.prevent="OpenWindow($event, 'info')"></a>
+			</header>
+			<div class="mui-content">
+				<!--列表信息流 开始-->
+				<div id="slider" class="mui-slider mui-fullscreen">
+					<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<div class="mui-scroll">
+							<a class="mui-control-item mui-active font" href="#item1mobile">
+								图文
+							</a>
+							<a class="mui-control-item font" href="#item2mobile">
+								影视
+							</a>
+							<a class="mui-control-item font" href="#item3mobile">
+								音乐
+							</a>
+						</div>	
+					</div>
+					<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+					<div id="list" class="mui-slider-group" ref="muiSliderGroup">
+						<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+							<div id="scroll1" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="contentList" v-for="(item,index) in items[0].data">
+											<a class="item s1" href="javascript:;" :data-guid="item.guid" @tap="open_detail(item, 0)">
+												<p class="item-picture-date" v-if="index === 0">{{date | formatDate}}</p>
+												<p class="item-picture-date" v-else>{{item.post_date | formatDate}}</p>
+												<div class="wrap-img">
+													<img :src="item.img_url" alt="" />
+												</div>
+												<p class="picture-author">作者 | {{item.author.user_name}}</p>
+												<p class="picture-content">{{item.forward}}</p>
+												<p class="picture-author">《{{item.title}}》</p>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="item2mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="contentList" v-for="(item,index) in items[1].data">
+											<a class="item s2" href="javascript:;"  @tap="open_detail(item, 1)">
+												<p class="text-title ellipsis-row2">{{item.title}}</p>
+												<p class="text-author ellipsis-row1">文／{{item.author.user_name}}</p>
+												<div class="wrap-img">
+													<img :src="item.img_url" alt="" />
+												</div>
+												<p class="text-content-short ellipsis-row2">{{item.forward}}</p>
+												<p class="text-movie-subtitle ellipsis-row1">——关于《{{item.subtitle}}》</p>
+												<p class="date" v-if="index === 0">{{date | formatDate}}</p>
+												<p class="date" v-else>{{item.post_date | formatDate}}</p>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="item3mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="contentList" v-for="(item,index) in items[2].data">
+											<a class="item s3" href="javascript:;" :data-guid="item.guid" @tap="open_detail(item, 2)">
+												<p class="text-title ellipsis-row2">{{item.title}}</p>
+												<p class="text-author ellipsis-row1">文／{{item.author.user_name}}</p>
+												<div class="text-music-cover">
+												<div class="text-music-cover-background"> </div>
+												    <div class="text-music-cover-img">
+												        <img class="lazy_img resize_img img_center_y" :src="item.img_url" style="display: inline;">
+												    </div>
+												    <div class="music-play music-detail-status">
+												        <img class="play-btn" src="http://image.wufazhuce.com/play_btn_empty.png">
+												    </div>
+												    <img src="images/music_copyright_1.png" width="100%" class="platform-icon">
+												</div>
+												<p class="text-music-author ellipsis-row1">{{item.music_name}} · {{item.audio_author}} | {{item.audio_album}}</p>
+												<p class="text-content-short ellipsis-row2">{{item.forward}}</p>
+												<p class="date" v-if="index === 0">{{date | formatDate}}</p>
+												<p class="date" v-else>{{item.post_date | formatDate}}</p>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>	
+				</div>
+				<!--列表信息流 结束-->
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
+		<script type="text/javascript" src="js/lib.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+	</body>
+</html>

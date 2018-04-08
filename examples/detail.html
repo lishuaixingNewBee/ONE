@@ -1,0 +1,193 @@
+<!doctype html>
+<html class="detail-html">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/list-to-detail.css" />
+		<link rel="stylesheet" type="text/css" href="../css/lib.css" />
+	</head>
+	<body>
+		<div class="mui-content" ref="muiContent">
+			<section id="A" v-if="items.style_type === 0 || items.style_type === 1">
+					<div class="wrap-img">
+						<img :src="items.img_url" />
+					</div>
+					<h2 class="title">{{items.title}}</h2>
+					<p class="text-subtitle" v-if="items.style_type === 1" style="color: #000;">
+				        ——关于《{{items.subtitle}}》
+				    </p>
+				    <p class="text-simple-author">文 / {{items.author}}</p>
+			</section>
+			<section id="B" v-if="items.style_type === 2">
+			<audio :src="this.musicSrc" id="song" style="display:none;" ref="song" @ended="isPlay = false" controls=""></audio>
+				<div class="text-detail">
+				    <div style="position:relative;clear:both;height:335px;">
+				        <div style="position:absolute;left:-186px;top:-184px;width:490px;height:490px;border-radius:245px 245px 245px 0px;box-shadow:0 0 20px 5px rgba(230,230,230,0.6);"></div>
+				        <div class="cd-bg cd" :class="{cd_rotate: !isPlay}" :style="{backgroundImage: `url(${items.cover})`}"></div>
+				        <div style="position:absolute;left:40px;top:60px;width:50px;height:50px;" id="music-play-btn" class="music-detail-status">
+				        	<div class="play-btn" :class="{loading:isLoding, on:isPlay}" @click="play"></div>
+				        </div>				        
+				        <div style="display: none;" id="popupXiamiMusic-placeholder"><!-- placeholder for popupXiamiMusic --></div>
+				        </div>
+				    </div>
+				    <div class="text-music-info">
+					    <div>{{items.music_name}}</div>
+					    <div>{{items.audio_author}}</div>
+					    <div>{{items.audio_album}}</div>
+					</div>
+					<div class="text-title" style="margin-top:15px;text-align:center;">
+        				{{items.forward}}
+					</div>
+					<div class="text-simple-author">文 \ {{items.author}}</div>
+			</section>
+			<div class="text-content" v-if="items.content" v-html="items.content"></div>
+		</div>			
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/lib.js"></script>
+		<script src="better-scroll/build/bscroll.js"></script>
+		<script type="text/javascript">
+			mui.init({
+					gestureConfig: {
+						longtap: true
+					},
+					swipeBack: true //启用右滑关闭功能
+			});
+			var vm = new Vue({
+				el: '.mui-content',
+				data () {
+			      return {
+		      		items:{
+		      			item_id: null,
+						logo: 'http://image.wufazhuce.com/ONE_logo_120_square.png',
+						title: null,
+						author: null,
+						forward: null,
+						img_url: null,
+						music_name: null,
+						audio_album: null,
+						audio_author: null,
+						style_type: null,
+						cover: null, // 专辑封面
+						subtitle: null, //  电影来源 || 音乐
+						content: null, // 正文
+						url: '', // 网页地址
+		      		},
+		      		isLoding: true,
+		      		isPlay: false,
+		      		music_id: '',
+		      		isMusic: false,
+		      		musicSrc:''
+			      }
+			  	},
+				created() {
+					this.getData();
+				},
+				methods: {
+				    resetTemp() {
+				      this.items = {
+		      			item_id: null,
+						logo: 'http://image.wufazhuce.com/ONE_logo_120_square.png',
+						title: null,
+						author: null,
+						forward: null,
+						img_url: null,
+						music_name: null,
+						audio_album: null,
+						audio_author: null,
+						style_type: null,
+						cover: null, // 专辑封面
+						subtitle: null, //  电影来源 || 音乐
+						content: null, // 正文
+						url: '', // 网页地址
+					  }
+		      		},
+					getData() {
+						document.addEventListener('get_detail', (event) => {//监听自定义事件，获取新闻详情
+							let data = event.detail.data;
+							if(!data) {
+								return;
+							}
+							data.style_type !== 1 ? data.content = undefined : data.content;
+							// 前页传入的数据，直接渲染，无需等待ajax请求详情后
+							this.items = data;			
+							if(data.style_type === 0) { // 列表页返回的content和详情页content不一样，所以重新请求真实的详情页数据content。
+								util.ajax(`http://v3.wufazhuce.com:8000/api/essay/${data.item_id}?channel=wdj&source=channel_reading&source_id=9264&version=4.0.2&uuid=ffffffff-a90e-706a-63f7-ccf973aae5ee&platform=android`,'get',null,(res) => {
+									this.items.content =res.data.hp_content;
+								})
+							}else if(data.style_type === 2) { //  音乐处理
+								this.isLoding = true;
+								this.isPlay = false;
+								this.isMusic = false;
+								this.initMusic(); // 初始化音乐
+								util.ajax(`http://v3.wufazhuce.com:8000/api/music/detail/${data.item_id}?channel=wdj&version=4.0.2&uuid=ffffffff-a90e-706a-63f7-ccf973aae5ee&platform=android`,'get',null,(res) => {
+									this.items.content =res.data.story;
+								})
+							}
+						})
+					},
+					initMusic (){
+						// 没有搞定虾米音乐接口，所以用网易云替代
+						 util.ajax(`https://music-api-jwzcyzizya.now.sh/api/search/song/qq?key=${this.items.audio_author}${this.items.music_name}&limit=5&page=1`,'get',null,(res) => {
+						  	if(res.songList && res.songList.length > 0) {
+						  		this.music_id = res.songList[0].id;
+						  		util.ajax(`https://music-api-jwzcyzizya.now.sh/api/get/song/qq?id=${this.music_id}`,'get',null,(res) => {
+						  			if (res.success){
+						  				this.isLoding = false; // 结束loding动画
+						  				this.isMusic = true;  //  歌曲存在
+						  				this.musicSrc = res.url;
+						  			} else {
+								  		this.isLoding = false; // 结束loding动画
+								  		this.isMusic = false;  //  歌曲存在
+								  		mui.toast(`暂无音乐版权!`,{ duration:1500, type:'div' });
+						  			}
+						  		})
+						  	}else {
+						  		this.isLoding = false; // 结束loding动画
+						  		this.isMusic = false;  //  歌曲存在
+						  		mui.toast(`暂无音乐版权!`,{ duration:1500, type:'div' });
+						  	}
+						 })
+					},
+					play () {
+						if(this.isLoding) {
+							return;
+						}
+						if(!this.isMusic) {
+							mui.toast(`暂无音乐版权!`,{ duration:1500, type:'div' });
+							return;
+						}
+						this.isPlay = !this.isPlay;
+						if(this.isPlay) {
+							mui.toast(`开始播放,缓冲中...`,{ duration:1500, type:'div' });
+							this.$refs.song.play();
+						} else {
+							this.pause();
+						}
+					},
+					pause (){
+						if (this.$refs.song) {
+							this.$refs.song.pause();
+						}
+					}
+				}
+			});
+			//重写返回逻辑
+			mui.back = function() {
+				plus.webview.currentWebview().hide("auto", 300);
+			}
+			//窗口隐藏时，重置页面数据
+			mui.plusReady(function () {
+				let self = plus.webview.currentWebview();
+				self.addEventListener("hide",function (e) {
+					window.scrollTo(0, 0);
+					vm.pause();
+					vm.resetTemp(); //重置数据
+				},false);
+			})
+		</script>
+	</body>
+
+</html>

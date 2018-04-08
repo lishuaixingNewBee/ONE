@@ -1,0 +1,23 @@
+{
+  "index.html": {
+    "refer": [
+      "examples/detail.html",
+      "examples/everyday.html",
+      "examples/info.html",
+      "examples/guide.html"
+    ],
+    "resources": []
+  },
+  "examples/everyday.html": {
+    "refer": [
+      "index.html"
+    ],
+    "resources": []
+  },
+  "examples/info.html": {
+    "refer": [
+      "index.html"
+    ],
+    "resources": []
+  }
+}

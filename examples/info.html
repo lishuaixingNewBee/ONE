@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			p{text-indent:22px;padding:5px 8px}html,body,.mui-content{background-color:#fff}.mui-bar-nav{height:60px;padding-top:16px}h4{margin-left:5px}.qrcode{top:50px;width:100%;text-align:center}.qrcode img{margin:0 auto}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">关于</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<div class="qrcode">
+					<img id="qrcode" src="../images/qrcode.png" width="100%" />
+					<a id="shortcut" style="width: 60%;margin: 15px auto;padding: 5px;" class="mui-hidden mui-btn mui-btn-block mui-btn-red">创建桌面图标</a>
+				</div>
+				<p>此APP仅供学习参考,且本人学艺不精,还望同学们多多指出来，加以学习。本App所有Api均由本人皆从网络获取。获取与共享之行为或有侵犯产品权益的嫌疑。若被告知需停止共享与使用，本人会及时删除此页面与整个项目。请您暸解相关情况，并遵守产品协议。</p>	
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				gestureConfig: {
+					longtap: true
+				},
+				swipeBack: true //启用右滑关闭功能
+			});
+			var qrcodeEl = document.getElementById("qrcode");
+			qrcodeEl.addEventListener('longtap', function() {
+				plus.nativeUI.actionSheet({
+					cancel: '取消',
+					buttons: [{
+						title: '保存到相册'
+					}]
+				}, function(e) {
+					var index = e.index;
+					if (e.index === 1) {
+						plus.gallery.save(qrcodeEl.src, function() {
+							mui.toast('保存成功');
+						}, function() {
+							mui.toast('保存失败，请重试！');
+						});
+					}
+				});
+			});
+			if (mui.os.android&&mui.os.stream) { //创建快捷方式
+				var shortcutElem = document.getElementById("shortcut");
+				shortcutElem.classList.remove('mui-hidden');
+				shortcutElem.addEventListener('tap', function() {
+					plus.navigator.createShortcut({
+						name: "hello-mui",
+						icon: "images/logo.png"
+					});
+				});
+			}
+		</script>
+	</body>
+
+</html>

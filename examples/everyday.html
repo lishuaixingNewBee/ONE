@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="page-everyday">
+
+	<head>
+		<meta charset="utf-8">
+		<title>二次元</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/lib.css">
+	</head>
+	<body>
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left back"></a>
+		<div class="slideshow">
+			<div class="slideshow-image" style="background-image: url(../images/cover1.jpg)"></div>
+			<div class="slideshow-image" style="background-image: url(../images/cover2.jpg)"></div>
+			<div class="slideshow-image" style="background-image: url('http://www.005.tv/uploads/allimg/161212/22-1612121Q22B01.jpg')"></div>
+			<div class="slideshow-image" style="background-image: url('http://pic.xiudodo.com/figure/00/00/32/87/38/3155bd944f17d48.jpg')"></div>
+		</div>
+		<div class="content">
+			<div class="wrap-img">
+				<img src="" class="zoomIn one_img" alt="" />
+			</div>
+			<div class="text">
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+		mui.init({
+				gestureConfig: {
+					longtap: true
+				},
+				swipeBack: true //启用右滑关闭功能
+			});
+		 // 首页onload从服务器获取列表数据
+		 let one_img = document.querySelector('.one_img');
+		 mui.plusReady(function(){
+		        let data = plus.webview.currentWebview();
+		        let text = `<p class="picture-author animated bounceInDown">摄影 | ${data.pic_info}</p>
+							<p class="picture-content animated bounceInLeft">${data.forward}</p>
+							<p class="picture-author animated bounceInRight">${data.words_info}</p>`
+		   		document.querySelector('.text').innerHTML = text;
+		   		one_img.src = data.img_url;
+		 });
+	</script>
+	</body>
+</html>
