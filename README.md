@@ -16,7 +16,7 @@
  
  ![每日一图](https://user-gold-cdn.xitu.io/2018/4/9/162ab1bff38f9cb2?w=335&h=593&f=gif&s=3859348)
  
- ###  项目介绍
+###  项目介绍
 使用HBuilder作为开发打包工具，基于MUI框架开发，能同时运行在Android、iOS环境下。
 实现了「ONE·一个」绝大部分的功能点，涵盖了图文、阅读、音乐、电影四大版块。
 - 开屏引导图
@@ -36,9 +36,8 @@
 - 关于
     - [调用Android保存图片](#about)
 
- ###  项目介绍
- 
- 项目运行
+### 项目运行
+
 ```bash
     # 克隆项目
     git clone https://github.com/lishuaixingNewBee/ONE.git
