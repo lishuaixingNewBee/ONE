@@ -10,7 +10,7 @@
  前段时间由于业务需要快速开发App，所以上手了MUI，试着写了一个小项目作为练手，分享给大家,能力有限，大家多包涵。虽然现在还是以ReactNative为主，但是MUI应付一些小应用还是很方便的，话不多说，先上图。
  ![开屏引导](https://user-gold-cdn.xitu.io/2018/4/9/162ab14d9df02379?w=335&h=593&f=gif&s=2077118)
  
- ![阅读界面](https://img-blog.csdn.net/20180411100111538?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3djc2xi/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+ ![阅读界面](https://upload-images.jianshu.io/upload_images/3119054-0be715e0fd37796c.gif?imageMogr2/auto-orient/strip)
  
  ![音乐播放界面](https://user-gold-cdn.xitu.io/2018/4/9/162ab194ed49bd12?w=335&h=593&f=gif&s=4861403)
  
